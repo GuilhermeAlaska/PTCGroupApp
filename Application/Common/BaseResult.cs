@@ -2,18 +2,18 @@
 {
     public class BaseResult<T> where T : class
     {
-        public BaseResult(int statusCode, string? message)
+        public BaseResult(int statusCode, string? message, bool success = false)
         {
             Message = message;
             StatusCode = statusCode;
-            Success = false;
+            Success = success;
         }
 
-        public BaseResult(int statusCode, T data)
+        public BaseResult(int statusCode, T data, bool success = true)
         {
             Data = data;
             StatusCode = statusCode;
-            Success = true;
+            Success = success;
         }
 
         public T? Data { get; set; }

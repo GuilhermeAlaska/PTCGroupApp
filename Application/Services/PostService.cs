@@ -1,5 +1,7 @@
-﻿using Application.Dtos.Posts;
+﻿using Application.Common;
+using Application.Dtos.Posts;
 using Application.Interfaces;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,27 +12,32 @@ namespace Application.Services
 {
     public class PostService : IPostService
     {
-        public void CreatePost()
+        public Task<BaseResult<PostDto>> CreatePost()
         {
             throw new NotImplementedException();
         }
 
-        public void DeletePost(Guid id)
+        public Task<BaseResult<PostDto>> DeletePost(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public List<PostDto> GetAllPosts()
+        public Task<List<PostDto>> GetAllPosts()
         {
             throw new NotImplementedException();
         }
 
-        public PostDto? GetPostById(Guid id)
+        public Task<PostDto> GetPostById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdatePost(PostDto post)
+        public Task<List<PostDto>> GetPostsByCategory(Category category)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<BaseResult<PostDto>> UpdatePost()
         {
             throw new NotImplementedException();
         }

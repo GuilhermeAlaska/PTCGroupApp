@@ -1,6 +1,7 @@
 ﻿using Api.Controllers.v1.Base;
 using Application.Dtos.Posts;
 using Application.Interfaces;
+using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,13 @@ namespace Api.Controllers.v1
         public async Task<List<PostDto>> GetAllPosts()
         {
             return await _postService.GetAllPosts();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("category/{category}")]
+        public async Task<List<PostDto>> GetPostsByCategory([FromRoute] Category category)
+        {
+            return await _postService.GetPostsByCategory(category);
         }
 
         [HttpPost]
