@@ -3,8 +3,7 @@
     public interface IJwtService
     {
         string ApplicationAccessToken(
-            string userId,
-            IEnumerable<string> roles);
+            string userId);
 
         string PasswordToken(
             string userId);

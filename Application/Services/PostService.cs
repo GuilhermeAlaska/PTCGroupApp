@@ -1,45 +1,101 @@
 ﻿using Application.Common;
+using Application.Common.Interfaces;
 using Application.Dtos.Posts;
 using Application.Interfaces;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
-    public class PostService : IPostService
+    public class PostService(IApplicationDbContext context, IMapper mapper) : IPostService
     {
-        public Task<BaseResult<PostDto>> CreatePost()
+        public async Task<BaseResult<PostDto>> CreatePost(string title, string shortDescription, string fullPost, Category? category)
         {
-            throw new NotImplementedException();
+            var post = new Post(title, shortDescription, fullPost, category);
+
+            try
+            {
+                await context.Posts.AddAsync(post);
+
+                await context.SaveChangesAsync(new CancellationToken());
+
+                return new BaseResult<PostDto>(201, "Post criado com sucesso!");
+            }
+            catch
+            {
+                return new BaseResult<PostDto>(500, "Não foi possível criar um post, tente novamente mais tarde.");
+            }
         }
 
-        public Task<BaseResult<PostDto>> DeletePost(Guid id)
+        public async Task<BaseResult<PostDto>> DeletePost(Guid id)
         {
-            throw new NotImplementedException();
+            var post = await context.Posts.FirstAsync(p => p.Id == id);
+
+            try
+            {
+                context.Posts.Remove(post);
+                await context.SaveChangesAsync(new CancellationToken());
+                return new BaseResult<PostDto>(200, "Post deletado com sucesso!", true);
+            }
+            catch
+            {
+                return new BaseResult<PostDto>(500, "Não foi possível apagar o post, tente novamente mais tarde.");
+            }
         }
 
-        public Task<List<PostDto>> GetAllPosts()
+        public async Task<List<PostDto>> GetAllPosts()
         {
-            throw new NotImplementedException();
+            return await context
+                .Posts
+                .AsNoTracking()
+                .OrderBy(p => p.Category)
+                .ThenByDescending(p => p.CreatedAt)
+                .ProjectTo<PostDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
-        public Task<PostDto> GetPostById(Guid id)
+        public async Task<PostDto> GetPostById(Guid id)
         {
-            throw new NotImplementedException();
+            return await context
+                .Posts
+                .AsNoTracking()
+                .Where(p => p.Id == id)
+                .ProjectTo<PostDto>(mapper.ConfigurationProvider)
+                .FirstAsync();
         }
 
-        public Task<List<PostDto>> GetPostsByCategory(Category category)
+        public async Task<List<PostDto>> GetPostsByCategory(Category category)
         {
-            throw new NotImplementedException();
+            return await context
+                .Posts
+                .AsNoTracking()
+                .Where(p => p.Category == category)
+                .OrderByDescending(p => p.CreatedAt)
+                .ProjectTo<PostDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
-        public Task<BaseResult<PostDto>> UpdatePost()
+        public async Task<BaseResult<PostDto>> UpdatePost(Guid postId, string title, string shortDescription, string fullPost, Category category)
         {
-            throw new NotImplementedException();
+            var post = await context.Posts.FirstAsync(p => p.Id == postId);
+
+            post.Edit(title, shortDescription, fullPost, category);
+
+            try
+            {
+                context.Posts.Update(post);
+
+                await context.SaveChangesAsync(new CancellationToken());
+
+                return new BaseResult<PostDto>(200, "Post alterado com sucesso!");
+            }
+            catch
+            {
+                return new BaseResult<PostDto>(500, "Não foi possível editar um post, tente novamente mais tarde.");
+            }
         }
     }
 }

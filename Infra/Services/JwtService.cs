@@ -14,7 +14,7 @@ namespace Infra.Services
         private readonly JwtSettings _jwtSettings = jwtSettings.Value
             ?? throw new ArgumentNullException(nameof(jwtSettings));
 
-        public string ApplicationAccessToken(string userId, IEnumerable<string> roles)
+        public string ApplicationAccessToken(string userId)
         {
             var key = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
 
@@ -22,8 +22,6 @@ namespace Infra.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId)
             };
-
-            claimCollection.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

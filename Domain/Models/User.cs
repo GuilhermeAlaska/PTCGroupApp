@@ -7,20 +7,24 @@ namespace Domain.Models
     {
         protected User() => Expression.Empty();
 
-        public User(string name, string email, string password, IList<string> roles)
+        public User(string name, string email, string password)
         {
             Name = name;
-            Email = email;
+            Email = email.ToLower();
             Password = password;
-            Roles = roles;
+            IsActive = true;
         }
 
         public string Name { get; protected set; } = null!;
         public string Email { get; protected set; } = null!;
         public string Password { get; protected set; } = null!;
-        public IList<string> Roles { get; protected set; }
+        public bool IsActive { get; protected set; } = true;
         public IList<Post> Posts { get; set; } = new List<Post>();
 
+        public void UpdateName(string name)
+        {
+            Name = name;
+        }
         public void UpdateEmail(string email)
         {
             Email = email;
@@ -30,5 +34,8 @@ namespace Domain.Models
         {
             Password = newPassword;
         }
+
+        public void Deactivate() => IsActive = false;
+        public void Reactivate() => IsActive = true;
     }
 }

@@ -1,14 +1,13 @@
-﻿using Domain.Entities;
+﻿using Application.Interfaces;
 using Domain.Enums;
 using Domain.Models;
-using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Persistence
 {
     public static class AppSeedData
     {
-        public static ModelBuilder AppSeedDataBaseConstructor(this ModelBuilder modelBuilder)
+        public static ModelBuilder AppSeedDataBaseConstructor(this ModelBuilder modelBuilder, IPasswordService _passwordService)
         {
             var createAt = new DateTime(2023, 10, 10, 12, 00, 00, DateTimeKind.Utc);
 
@@ -55,10 +54,17 @@ namespace Infra.Persistence
                 "As principais notícias de tecnologia.",
                 "Nesta semana, grandes eventos...",
                 Category.Noticias
-            )
-            };
+            )};
 
             modelBuilder.Entity<Post>().HasData(posts);
+
+            var initialUser = new User("Admin", "admin@meta.com", _passwordService.Hash("Secret@123"))
+            {
+                Id = new Guid("46c807d5-08df-4cd0-a4ae-d51703ce8a4d"),
+                CreatedAt = createAt
+            };
+
+            modelBuilder.Entity<User>().HasData(initialUser);
 
             return modelBuilder;
         }

@@ -34,49 +34,6 @@ namespace Infra.Services
             return string.Join(Delimeter, Convert.ToBase64String(salt), Convert.ToBase64String(hash));
         }
 
-        public string GenerateRandomPassword()
-        {
-            var requiredLength = 8;
-            string[] randomChars =
-            [
-                "ABCDEFGHJKLMNOPQRSTUVWXYZ", // uppercase 
-                "abcdefghijkmnopqrstuvwxyz", // lowercase
-                "0123456789", // digits
-                "!@$?_-" // non-alphanumeric
-            ];
-
-            var rand = new Random(Environment.TickCount);
-            List<char> chars = [];
-
-
-            chars.Insert(rand.Next(0, chars.Count),
-                randomChars[0][rand.Next(0, randomChars[0].Length)]);
-
-
-            chars.Insert(rand.Next(0, chars.Count),
-                randomChars[1][rand.Next(0, randomChars[1].Length)]);
-
-
-            chars.Insert(rand.Next(0, chars.Count),
-                randomChars[2][rand.Next(0, randomChars[2].Length)]);
-
-
-            chars.Insert(rand.Next(0, chars.Count),
-                randomChars[3][rand.Next(0, randomChars[3].Length)]);
-
-            for (var i = chars.Count;
-                 i < requiredLength
-                 || chars.Distinct().Count() < requiredLength;
-                 i++)
-            {
-                var rcs = randomChars[rand.Next(0, randomChars.Length)];
-                chars.Insert(rand.Next(0, chars.Count),
-                    rcs[rand.Next(0, rcs.Length)]);
-            }
-
-            return new string(chars.ToArray());
-        }
-
         public bool Verify(string passwordHash, string password)
         {
             var elements = passwordHash.Split(Delimeter);

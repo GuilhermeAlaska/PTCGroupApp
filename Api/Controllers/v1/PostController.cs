@@ -1,4 +1,5 @@
 ﻿using Api.Controllers.v1.Base;
+using Api.Dto;
 using Application.Dtos.Posts;
 using Application.Interfaces;
 using Domain.Enums;
@@ -38,9 +39,9 @@ namespace Api.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult<PostDto>> CreatePost()
+        public async Task<ActionResult<PostDto>> CreatePost(CreatePostDto request)
         {
-            var result = await _postService.CreatePost();
+            var result = await _postService.CreatePost(request.Title, request.ShortDescription, request.FullPost, request.Category);
 
             if (!result.Success && result.StatusCode == 400)
                 return BadRequest(false);
@@ -51,9 +52,9 @@ namespace Api.Controllers.v1
         }
 
         [HttpPatch]
-        public async Task<ActionResult<PostDto>> UpdatePost()
+        public async Task<ActionResult<PostDto>> UpdatePost(UpdatePostDto request)
         {
-            var result = await _postService.UpdatePost();
+            var result = await _postService.UpdatePost(request.PostId, request.Title, request.ShortDescription, request.FullPost, request.Category);
 
             if (!result.Success && result.StatusCode == 400)
                 return BadRequest(false);

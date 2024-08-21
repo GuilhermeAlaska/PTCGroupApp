@@ -8,21 +8,19 @@ namespace Domain.Models
     {
         public Post() => Expression.Empty();
 
-        public Post(string title, string shortDescription, string fullPost, Category category)
+        public Post(string title, string shortDescription, string fullPost, Category? category)
         {
             Title = title;
             ShortDescription = shortDescription;
             FullPost = fullPost;
-            Category = category;
+            Category = category ?? Category.SemCategoria;
         }
 
-        public string Title { get; set; } = null!;
-        public string ShortDescription { get; set; } = null!;
-        public string FullPost { get; set; } = null!;
-        public Category Category { get; set; }
-        public int Likes { get; set; }
+        public string Title { get; private set; } = null!;
+        public string ShortDescription { get; private set; } = null!;
+        public string FullPost { get; private set; } = null!;
+        public Category Category { get; private set; }
 
-        public void Like() => Likes++;
         public void Edit(string title, string shortDescription, string fullPost, Category category)
         {
             Title = title;
