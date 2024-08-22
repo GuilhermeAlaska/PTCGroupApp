@@ -10,8 +10,6 @@ namespace API.Configs
 
             services.Configure<JwtPasswordConfig>(configuration.GetSection("JwtPasswordConfig"));
 
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
             return services;
         }
     }

@@ -2,8 +2,6 @@
 using Application.Common.Interfaces;
 using Application.Dtos.Posts;
 using Application.Interfaces;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.SignalR;
@@ -14,13 +12,11 @@ namespace Application.Services
     public class PostService : IPostService
     {
         private readonly IApplicationDbContext context;
-        private readonly IMapper mapper;
         private readonly IHubContext<NotificationHub> hubContext;
 
-        public PostService(IApplicationDbContext context, IMapper mapper, IHubContext<NotificationHub> hubContext)
+        public PostService(IApplicationDbContext context, IHubContext<NotificationHub> hubContext)
         {
             this.context = context;
-            this.mapper = mapper;
             this.hubContext = hubContext;
         }
 
@@ -67,23 +63,17 @@ namespace Application.Services
             return await context
                 .Posts
                 .AsNoTracking()
-                .ProjectTo<PostDto>(mapper.ConfigurationProvider)
+                .Select(p => new PostDto(p.Id, p.CreatedAt, p.Title, p.ShortDescription, p.FullPost, p.Category))
                 .ToListAsync();
         }
-        public async Task<List<Post>> GetAllPosts2()
-        {
-            return await context
-                .Posts
-                .AsNoTracking()
-                .ToListAsync();
-        }
+
         public async Task<PostDto> GetPostById(Guid id)
         {
             return await context
                 .Posts
                 .AsNoTracking()
                 .Where(p => p.Id == id)
-                .ProjectTo<PostDto>(mapper.ConfigurationProvider)
+                .Select(p => new PostDto(p.Id, p.CreatedAt, p.Title, p.ShortDescription, p.FullPost, p.Category))
                 .FirstAsync();
         }
 
@@ -94,7 +84,7 @@ namespace Application.Services
                 .AsNoTracking()
                 .Where(p => p.Category == category)
                 .OrderByDescending(p => p.CreatedAt)
-                .ProjectTo<PostDto>(mapper.ConfigurationProvider)
+                .Select(p => new PostDto(p.Id, p.CreatedAt, p.Title, p.ShortDescription, p.FullPost, p.Category))
                 .ToListAsync();
         }
 

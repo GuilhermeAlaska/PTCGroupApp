@@ -9,7 +9,6 @@ namespace Application.Interfaces
     {
         public Task<PostDto> GetPostById(Guid id);
         public Task<List<PostDto>> GetAllPosts();
-        public Task<List<Post>> GetAllPosts2();
         public Task<List<PostDto>> GetPostsByCategory(Category category);
         public Task<BaseResult<PostDto>> CreatePost(string title, string shortDescription, string fullPost, Category? category);
         public Task<BaseResult<PostDto>> UpdatePost(Guid postId, string title, string shortDescription, string fullPost, Category category);

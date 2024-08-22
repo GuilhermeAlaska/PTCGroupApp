@@ -26,6 +26,7 @@ namespace Application.Services
                 user => user.Email.Trim().ToLower() == email.Trim().ToLower());
 
             var isInserting = true;
+
             if (existingUser is not null)
             {
                 if (!existingUser.IsActive)
@@ -41,8 +42,7 @@ namespace Application.Services
 
             var hashedPassword = passwordService.Hash(password);
 
-            var userToRegister = existingUser ??
-                                 new User(name, email, hashedPassword);
+            var userToRegister = existingUser ?? new User(name, email, hashedPassword);
 
             if (isInserting)
             {
@@ -94,7 +94,7 @@ namespace Application.Services
             var token = jwtService.ApplicationAccessToken(
                 user.Id.ToString());
 
-            return new BaseResult<UserDto>(200, token);
+            return new BaseResult<UserDto>(200, token, true);
         }
 
         public async Task<BaseResult<UserDto>> UpdatePassword(string password, string actualPassword, Guid userId)
@@ -133,6 +133,8 @@ namespace Application.Services
 
             if (!string.IsNullOrEmpty(email))
                 user.UpdateEmail(email);
+
+            await context.SaveChangesAsync(new CancellationToken());
 
             return new BaseResult<UserDto>(200, "Sucesso", true);
         }

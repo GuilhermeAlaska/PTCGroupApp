@@ -27,9 +27,9 @@ namespace Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<List<Post>> GetAllPosts()
+        public async Task<List<PostDto>> GetAllPosts()
         {
-            return await _postService.GetAllPosts2(); // Remover autoMapper e fazer o select para as dtos
+            return await _postService.GetAllPosts();
         }
 
         [AllowAnonymous]
@@ -40,7 +40,7 @@ namespace Api.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult<PostDto>> CreatePost(CreatePostDto request)
+        public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostDto request)
         {
             var result = await _postService.CreatePost(request.Title, request.ShortDescription, request.FullPost, request.Category);
 
@@ -53,7 +53,7 @@ namespace Api.Controllers.v1
         }
 
         [HttpPatch]
-        public async Task<ActionResult<PostDto>> UpdatePost(UpdatePostDto request)
+        public async Task<ActionResult<PostDto>> UpdatePost([FromBody] UpdatePostDto request)
         {
             var result = await _postService.UpdatePost(request.PostId, request.Title, request.ShortDescription, request.FullPost, request.Category);
 

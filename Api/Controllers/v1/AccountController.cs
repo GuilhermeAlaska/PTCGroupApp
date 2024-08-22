@@ -1,12 +1,14 @@
 ﻿using Api.Controllers.v1.Base;
 using Api.Dto;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.v1
 {
     public class AccountController(IUserService userService) : BaseController
     {
+        [AllowAnonymous]
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignInRequest request)
         {
@@ -20,6 +22,7 @@ namespace Api.Controllers.v1
             return BadRequest(result);
         }
 
+        [AllowAnonymous]
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {

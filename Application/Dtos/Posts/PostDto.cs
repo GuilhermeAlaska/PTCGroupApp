@@ -1,30 +1,24 @@
-﻿using Application.Common.Mappings;
-using AutoMapper;
-using Domain.Enums;
-using Domain.Models;
+﻿using Domain.Enums;
 
 namespace Application.Dtos.Posts
 {
-    public class PostDto : IMapFrom<Post>
+    public class PostDto
     {
-        //public Guid Id { get; set; }
-        //public DateTime CreatedAt { get; set; }
-        public string Title { get; set; } = string.Empty;
-        //public string ShortDescription { get; set; } = string.Empty;
-        //public string FullPost { get; set; } = string.Empty;
-        //public Category Category { get; set; }
-
-        public void Mapping(Profile profile)
+        public PostDto(Guid id, DateTime createdAt, string title, string shortDescription, string fullPost, Category category)
         {
-            profile.CreateMap<Post, PostDto>()
-                .ForMember(d => d.Title, opt => opt.MapFrom(s => s.Title))
-                ;
-
-            //profile.CreateMap<Post, PostDto>()
-            //    .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
-            //    .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.CreatedAt))
-            //    .ForMember(p => p.Category, opt => opt.MapFrom(src => src.Category.ToString()))
-            //    ;
+            Id = id;
+            CreatedAt = createdAt;
+            Title = title;
+            ShortDescription = shortDescription;
+            FullPost = fullPost;
+            Category = category.ToString();
         }
+
+        public Guid Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string ShortDescription { get; set; } = string.Empty;
+        public string FullPost { get; set; } = string.Empty;
+        public string Category { get; set; }
     }
 }

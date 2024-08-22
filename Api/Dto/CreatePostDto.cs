@@ -2,20 +2,37 @@
 
 namespace Api.Dto
 {
-    public class CreatePostDto(string title, string shortDescription, string fullPost, Category? category)
+    public class CreatePostDto
     {
-        public string Title = title;
-        public string ShortDescription = shortDescription;
-        public string FullPost = fullPost;
-        public Category? Category = category;
+        public CreatePostDto(string title, string shortDescription, string fullPost, Category? category)
+        {
+            Title = title;
+            ShortDescription = shortDescription;
+            FullPost = fullPost;
+            Category = category;
+        }
+
+        public string Title { get; set; }
+        public string ShortDescription { get; set; }
+        public string FullPost { get; set; }
+        public Category? Category { get; set; }
     }
 
-    public class UpdatePostDto(string title, string shortDescription, string fullPost, Category category, Guid postId)
+    public class UpdatePostDto
     {
-        public string Title = title;
-        public string ShortDescription = shortDescription;
-        public string FullPost = fullPost;
-        public Category Category = category;
-        public Guid PostId = postId;
+        public UpdatePostDto(Guid postId, string title, string shortDescription, string fullPost, Category category)
+        {
+            PostId = postId;
+            Title = title;
+            ShortDescription = shortDescription;
+            FullPost = fullPost;
+            Category = category;
+        }
+
+        public Guid PostId { get; set; }
+        public string Title {  get; set; }
+        public string ShortDescription { get; set; }
+        public string FullPost { get; set; }
+        public Category Category { get; set; }
     }
 }
