@@ -1,4 +1,6 @@
+using Api.Configs;
 using API.Configs;
+using Application.Services;
 using Infra;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,8 @@ builder.Services.AddResponseCaching();
 builder.Services.AddAuthorization(builder.Configuration);
 
 builder.Services.AddControllers();
+
+NotificationConfig.ConfigureServices(builder.Services);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,13 +45,19 @@ builder.Services.AddInfra(builder.Configuration);
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
-
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.UseEndpoints(static endpoints =>
+{
+    endpoints.MapHub<NotificationHub>("/notificationHub");
+});
 
 app.Run();

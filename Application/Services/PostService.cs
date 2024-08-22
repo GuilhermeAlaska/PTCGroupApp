@@ -6,11 +6,12 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Enums;
 using Domain.Models;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
-    public class PostService(IApplicationDbContext context, IMapper mapper) : IPostService
+    public class PostService(IApplicationDbContext context, IMapper mapper, IHubContext<NotificationHub> hubContext) : IPostService
     {
         public async Task<BaseResult<PostDto>> CreatePost(string title, string shortDescription, string fullPost, Category? category)
         {
@@ -21,6 +22,10 @@ namespace Application.Services
                 await context.Posts.AddAsync(post);
 
                 await context.SaveChangesAsync(new CancellationToken());
+
+                var notification = new Notification(title);
+
+                await hubContext.Clients.All.SendAsync("ReceiveNotification", notification);
 
                 return new BaseResult<PostDto>(201, "Post criado com sucesso!");
             }

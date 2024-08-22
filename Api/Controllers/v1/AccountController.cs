@@ -1,36 +1,75 @@
 ﻿using Api.Controllers.v1.Base;
-using Application.Common.Interfaces;
+using Api.Dto;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.v1
 {
-    public class AccountController(IJwtService jwtService, IUserService userService) : BaseController
+    public class AccountController(IUserService userService) : BaseController
     {
-        //[HttpPost("new-password")]
-        //public async Task<ActionResult> CreateNewPassword(NewPasswordDto newPasswordDto)
-        //{
-        //    var isValid = await jwtService.ValidPasswordToken(newPasswordDto.Token);
-        //    if (!isValid)
-        //        return BadRequest();
+        [HttpPost("signin")]
+        public async Task<IActionResult> SignIn([FromBody] SignInRequest request)
+        {
+            var result = await userService.SignIn(request.Email, request.Password);
 
-        //    var handler = new JwtSecurityTokenHandler();
-        //    var jsonToken = handler.ReadToken(newPasswordDto.Token);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
 
-        //    if (jsonToken is not JwtSecurityToken token)
-        //        return Unauthorized();
+            return BadRequest(result);
+        }
 
-        //    var userId = new Guid(token.Claims.First(claim => claim.Type == "sub").Value);
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
+        {
+            var result = await userService.CreateUser(request.Name, request.Email, request.Password);
 
-        //    var result = await userService.UpdatePassword
+            if (result.Success)
+            {
+                return CreatedAtAction("CreateUser", result);
+            }
 
-        //    var command = new UpdatePasswordCommand
-        //    {
-        //        Password = newPasswordDto.Password,
-        //        RePassword = newPasswordDto.RePassword,
-        //        UserId = userId
-        //    };
+            return BadRequest(result);
+        }
 
-        //    return Ok(await Mediator.Send(command));
-        //}
+        [HttpPut("update/{userId}")]
+        public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] UpdateUserRequest request)
+        {
+            var result = await userService.UpdateUser(userId, request.Name, request.Email);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpPut("update-password")]
+        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+        {
+            var result = await userService.UpdatePassword(request.Password, request.ActualPassword, request.UserId);
+
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpDelete("delete/{userId}")]
+        public async Task<IActionResult> DeleteUser(Guid userId)
+        {
+            var result = await userService.DeleteUser(userId);
+
+            if (result.Success)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(result);
+        }
     }
 }
