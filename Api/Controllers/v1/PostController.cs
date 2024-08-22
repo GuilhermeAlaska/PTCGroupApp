@@ -3,6 +3,7 @@ using Api.Dto;
 using Application.Dtos.Posts;
 using Application.Interfaces;
 using Domain.Enums;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,9 +27,9 @@ namespace Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<List<PostDto>> GetAllPosts()
+        public async Task<List<Post>> GetAllPosts()
         {
-            return await _postService.GetAllPosts();
+            return await _postService.GetAllPosts2(); // Remover autoMapper e fazer o select para as dtos
         }
 
         [AllowAnonymous]

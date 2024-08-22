@@ -11,8 +11,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
-    public class PostService(IApplicationDbContext context, IMapper mapper, IHubContext<NotificationHub> hubContext) : IPostService
+    public class PostService : IPostService
     {
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IHubContext<NotificationHub> hubContext;
+
+        public PostService(IApplicationDbContext context, IMapper mapper, IHubContext<NotificationHub> hubContext)
+        {
+            this.context = context;
+            this.mapper = mapper;
+            this.hubContext = hubContext;
+        }
+
         public async Task<BaseResult<PostDto>> CreatePost(string title, string shortDescription, string fullPost, Category? category)
         {
             var post = new Post(title, shortDescription, fullPost, category);
@@ -56,12 +67,16 @@ namespace Application.Services
             return await context
                 .Posts
                 .AsNoTracking()
-                .OrderBy(p => p.Category)
-                .ThenByDescending(p => p.CreatedAt)
                 .ProjectTo<PostDto>(mapper.ConfigurationProvider)
                 .ToListAsync();
         }
-
+        public async Task<List<Post>> GetAllPosts2()
+        {
+            return await context
+                .Posts
+                .AsNoTracking()
+                .ToListAsync();
+        }
         public async Task<PostDto> GetPostById(Guid id)
         {
             return await context

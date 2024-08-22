@@ -1,4 +1,5 @@
 ﻿using Application.Common.Configs;
+using System.Reflection;
 namespace API.Configs
 {
     public static class LoadConfigs
@@ -8,6 +9,8 @@ namespace API.Configs
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             services.Configure<JwtPasswordConfig>(configuration.GetSection("JwtPasswordConfig"));
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             return services;
         }
