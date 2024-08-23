@@ -44,7 +44,10 @@ namespace Application.Services
 
         public async Task<BaseResult<PostDto>> DeletePost(Guid id)
         {
-            var post = await context.Posts.FirstAsync(p => p.Id == id);
+            var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (post is null)
+                return new BaseResult<PostDto>(404, "Post não encontrado", false);
 
             try
             {
@@ -67,14 +70,14 @@ namespace Application.Services
                 .ToListAsync();
         }
 
-        public async Task<PostDto> GetPostById(Guid id)
+        public async Task<PostDto?> GetPostById(Guid id)
         {
             return await context
                 .Posts
                 .AsNoTracking()
                 .Where(p => p.Id == id)
                 .Select(p => new PostDto(p.Id, p.CreatedAt, p.Title, p.ShortDescription, p.FullPost, p.Category))
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<PostDto>> GetPostsByCategory(Category category)
@@ -90,7 +93,10 @@ namespace Application.Services
 
         public async Task<BaseResult<PostDto>> UpdatePost(Guid postId, string title, string shortDescription, string fullPost, Category category)
         {
-            var post = await context.Posts.FirstAsync(p => p.Id == postId);
+            var post = await context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (post is null)
+                return new BaseResult<PostDto>(404, "Post não encontrado", false);
 
             post.Edit(title, shortDescription, fullPost, category);
 

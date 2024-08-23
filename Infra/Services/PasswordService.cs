@@ -6,7 +6,7 @@ namespace Infra.Services
     public partial class PasswordService : IPasswordService
     {
         private const char Delimeter = '.';
-        private static readonly int Iterations = 10000; //
+        private static readonly int Iterations = 10000;
         private static readonly int SaltSize = 128 / 8; // 128 bit
         private static readonly int KeySize = 256 / 8; // 256 bit
         private static readonly HashAlgorithmName HashAlgorithmName = HashAlgorithmName.SHA256;

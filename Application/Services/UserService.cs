@@ -81,7 +81,7 @@ namespace Application.Services
         {
             var user = await context
                     .Users
-                    .FirstOrDefaultAsync(p => p.Email == email.ToLower());
+                    .FirstOrDefaultAsync(p => p.Email == email.ToLower() && p.IsActive);
 
             if (user is null)
                 return new BaseResult<UserDto>(404, "Usuário não encontrado.");

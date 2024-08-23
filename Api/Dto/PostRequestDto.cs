@@ -2,9 +2,9 @@
 
 namespace Api.Dto
 {
-    public class CreatePostDto
+    public class CreatePostRequestDto
     {
-        public CreatePostDto(string title, string shortDescription, string fullPost, Category? category)
+        public CreatePostRequestDto(string title, string shortDescription, string fullPost, Category? category)
         {
             Title = title;
             ShortDescription = shortDescription;

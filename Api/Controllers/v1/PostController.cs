@@ -3,7 +3,6 @@ using Api.Dto;
 using Application.Dtos.Posts;
 using Application.Interfaces;
 using Domain.Enums;
-using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +19,7 @@ namespace Api.Controllers.v1
 
         [AllowAnonymous]
         [HttpGet("{id:guid}")]
-        public async Task<PostDto> GetPostById([FromRoute] Guid id)
+        public async Task<PostDto?> GetPostById([FromRoute] Guid id)
         {
             return await _postService.GetPostById(id);
         }
@@ -40,7 +39,7 @@ namespace Api.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostDto request)
+        public async Task<ActionResult<PostDto>> CreatePost([FromBody] CreatePostRequestDto request)
         {
             var result = await _postService.CreatePost(request.Title, request.ShortDescription, request.FullPost, request.Category);
 
@@ -59,6 +58,8 @@ namespace Api.Controllers.v1
 
             if (!result.Success && result.StatusCode == 400)
                 return BadRequest(false);
+            else if (!result.Success && result.StatusCode == 404)
+                return NotFound(false);
             else if (!result.Success && result.StatusCode == 500)
                 return StatusCode(500);
 
@@ -72,6 +73,8 @@ namespace Api.Controllers.v1
 
             if (!result.Success && result.StatusCode == 400)
                 return BadRequest(false);
+            else if (!result.Success && result.StatusCode == 404)
+                return NotFound(false);
             else if (!result.Success && result.StatusCode == 500)
                 return StatusCode(500);
 

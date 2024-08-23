@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers.v1
 {
-    public class AccountController(IUserService userService) : BaseController
+    public class UserController(IUserService userService) : BaseController
     {
         [AllowAnonymous]
-        [HttpPost("signin")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] SignInRequest request)
         {
             var result = await userService.SignIn(request.Email, request.Password);
